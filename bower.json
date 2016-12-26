@@ -1,0 +1,26 @@
+{
+  "name": "Neighbourhood-Map",
+  "homepage": "https://github.com/orzzzl/Neighbourhood-Map",
+  "authors": [
+    "Zeleng Zhuang <zhuangzeleng19920731@gmail.com>"
+  ],
+  "description": "A final project for udacity nano-degree",
+  "main": "index.html",
+  "keywords": [
+    "map",
+    "neighbour-hood"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "knockout": "^3.4.1",
+    "bootstrap": "^3.3.7"
+  }
+}

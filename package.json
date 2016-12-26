@@ -1,0 +1,27 @@
+{
+  "name": "neighbourhood_map",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orzzzl/Neighbourhood-Map.git"
+  },
+  "keywords": [
+    "neighbourhood",
+    "map"
+  ],
+  "author": "Zeleng Zhuang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/orzzzl/Neighbourhood-Map/issues"
+  },
+  "homepage": "https://github.com/orzzzl/Neighbourhood-Map#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "grunt": "^1.0.1"
+  }
+}

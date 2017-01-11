@@ -1,6 +1,4 @@
-<style>
-@import url('https://fonts.googleapis.com/css?family=Shadows+Into+Light');
-</style>
+@import url('https://fonts.googleapis.com/css?family=Rock+Salt');
 
 #map {
     height: 100%;
@@ -22,8 +20,7 @@ a {
 }
 
 .mosaic {
-    font-family: 'Shadows Into Light', cursive;
-    font-weight: lighter;
+    font-family: 'Rock Salt', cursive;
     color: green;
 }
 

@@ -1,71 +1,70 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html>
 
 <head>
-    <title>Simple Map</title>
-    <meta name="viewport" content="initial-scale=1.0">
+    <title> Neighboorhood Map of Jersey City </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <link rel="stylesheet" herf="bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/simple-sidebar.css">
-    <link rel="stylesheet" href="css/main.css">
-</head>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" herf="bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/simple-sidebar.css" type="text/css">
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <link rel="apple-touch-icon" sizes="57x57" href="favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"> </head>
 
 <body>
     <div id="wrapper">
         <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="#">
-                        Start Bootstrap
-                    </a>
-                </li>
-                <li>
-                    <a href="#">Dashboard</a>
-                </li>
-                <li>
-                    <a href="#">Shortcuts</a>
-                </li>
-                <li>
-                    <a href="#">Overview</a>
-                </li>
-                <li>
-                    <a href="#">Events</a>
-                </li>
-                <li>
-                    <a href="#">About</a>
-                </li>
-                <li>
-                    <a href="#">Services</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
-                </li>
-            </ul>
+        <div id="sidebar-wrapper"> <a href="#" class="menu-toggle btn btn-default color-white text-center" name="menu-toggle">
+               ≡ Colapse
+            </a>
+            <br>
+            <br>
+            <div data-bind="foreach: venues">
+                <a href="#" class="color-white" data-bind="text: name, click: $parent.setVenue"></a>
+                <br> </div>
         </div>
-        <!-- /#sidebar-wrapper -->
-
-        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">&#8801;</a>
-
-        <div class="map-container">
-            <div id="map"></div>
+        <a class="btn btn-default" href="#"> <i class="black menu-toggle fa fa-align-justify" name="menu-toggle" title="Collapse"></i> </a>
+        <br>
+        <div data-bind="with: currentVenue" class="mosaic">
+            <h3 data-bind="text: name"></h3>
+            <p class="small" data-bind="text: location().address"></p>
+            <p class="small" data-bind="text: location().city"></p>
+            <p dclass="small" ata-bind="text: location().state"></p>
+            <p class="small" data-bind="text: location().country"></p>
+            <h3 data-bind="visible: hasPic()"> Pics from foursquare: </h3>
+            <div data-bind="foreach: photos"> <img src="" alt="venue image" data-bind="attr:{src: url}">
+                <br> </div>
+            <h3 data-bind="visible: hasNews()"> New York Times news feed: </h3>
+            <div data-bind="foreach: news"> 
+                <a target="_blank" data-bind="text: headline, attr:{href: url}"></a>
+                <br> </div>
         </div>
     </div>
-
-
-    <!-- jQuery -->
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="js/app.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA548H9aG7BTYLaYoHiAX5OufpbscTwN1U&callback=initMap" async defer></script>
-        <!-- Menu Toggle Script -->
-    <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    </script>
+    <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="bower_components/knockout/dist/knockout.debug.js" type="text/javascript"></script>
+    <script src="js/foursquare.js" type="text/javascript"></script>
+    <script src="js/nytimes.js" type="text/javascript"></script>
+    <script src="js/getdata.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+    <script src="js/sidebar.js" type="text/javascript"></script>
+    <script src="js/knockout_binding.js" type="text/javascript"></script>
 </body>
 
 </html>

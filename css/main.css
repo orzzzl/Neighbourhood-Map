@@ -1,16 +1,36 @@
-/* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
+<style>
+@import url('https://fonts.googleapis.com/css?family=Shadows+Into+Light');
+</style>
 
 #map {
     height: 100%;
     position: relative;
 }
 
-
-/* Optional: Makes the sample page fill the window. */
-
 .map-container {
     width: 100%; 
     height: 100%; 
     position: absolute;
+}
+
+a {
+    text-decoration: none;
+}
+
+.color-white {
+	color: white;
+}
+
+.mosaic {
+    font-family: 'Shadows Into Light', cursive;
+    font-weight: lighter;
+    color: green;
+}
+
+.black {
+    color: black;
+}
+
+p.small {
+    line-height: 58%;
 }

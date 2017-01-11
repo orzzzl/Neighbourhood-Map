@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Rock+Salt');
+@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One');
 
 #map {
     height: 100%;
@@ -20,7 +20,7 @@ a {
 }
 
 .mosaic {
-    font-family: 'Rock Salt', cursive;
+    font-family: 'Julius Sans One', sans-serif;
     color: green;
 }
 

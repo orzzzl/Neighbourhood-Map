@@ -70,6 +70,12 @@ var VenuesViewModel = function() {
     self.venues = ko.observableArray([]);
     self.currentVenue = ko.observable();
     self.searchText = ko.observable("");
+    self.searchText.extend({
+      rateLimit: {
+        timeout: 400,
+        method: "notifyWhenChangesStop"
+      }
+    });
     data.forEach(function(e) {
         self.venues.push(new venue(e));
     });

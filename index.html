@@ -30,12 +30,16 @@
 <body>
     <div id="wrapper">
         <!-- Sidebar -->
-        <div id="sidebar-wrapper"> <a href="#" class="menu-toggle btn btn-default color-white text-center" name="menu-toggle">
+        <div id="sidebar-wrapper"> 
+            <a href="#" class="menu-toggle btn btn-default color-white text-center" name="menu-toggle">
                ≡ Colapse
             </a>
             <br>
             <br>
-            <div data-bind="foreach: venues">
+            <input type="search" placeholder="Search the Venues" data-bind="textInput: searchText">
+            <br>
+            <br>
+            <div data-bind="foreach: filteredVenues">
                 <a href="#" class="color-white" data-bind="text: name, click: $parent.setVenue"></a>
                 <br> </div>
         </div>

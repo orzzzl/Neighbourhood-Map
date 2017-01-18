@@ -69,12 +69,26 @@ var VenuesViewModel = function() {
 	var self = this;
     self.venues = ko.observableArray([]);
     self.currentVenue = ko.observable();
+    self.searchText = ko.observable("");
     data.forEach(function(e) {
         self.venues.push(new venue(e));
     });
     this.setVenue = function(clickedVenue) {
         self.currentVenue(clickedVenue);
     }
+    
+    //filter the items using the filter text
+    self.filteredVenues = ko.computed(function() {
+        var filter = self.searchText().toLowerCase().trim();
+        if (!filter) {
+            return self.venues();
+        } else {
+            return ko.utils.arrayFilter(self.venues(), function(item) {
+                // filtering for string name contain the search text
+                return item.name().toLowerCase().indexOf(filter) !== -1;
+            });
+        }
+    }, self);
 }
 
 ko.applyBindings(new VenuesViewModel());

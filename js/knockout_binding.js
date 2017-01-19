@@ -69,11 +69,6 @@ function venue(data, search_text) {
         console.log(self.search_text());
         return true;
     }
-    self.marker = ko.observable(new google.maps.Marker({
-        position: new google.maps.LatLng(self.lat(), self.lng()),
-        title: self.name(),
-        map: map,
-    }));
 }
 
 
@@ -83,27 +78,20 @@ var mapoptions = {
 }
 
 ko.bindingHandlers.googlemap = {
-    init: function (element, valueAccessor) {
-        var venues = valueAccessor().venues(),
-        map = new google.maps.Map(element, mapoptions);
-        venues.forEach(function(e) {
-            latLng = new google.maps.LatLng(e.lat(), e.lng()),
-            marker = new google.maps.Marker({
-                position: latLng,
-                map: map
-            });    
-        });
-    },
     update: function (element, valueAccessor) {
+        console.log("googlemap update called");
         var venues = valueAccessor().venues(),
         map = new google.maps.Map(element, mapoptions);
         venues.forEach(function(e) {
-            latLng = new google.maps.LatLng(e.lat(), e.lng()),
+            var latLng = new google.maps.LatLng(e.lat(), e.lng()),
             marker = new google.maps.Marker({
                 position: latLng,
                 map: map,
                 icon: "imgs/icon.svg"
             });    
+            marker.addListener('click', function(){
+                alert("clicked");    
+            });
         });
     }
 };

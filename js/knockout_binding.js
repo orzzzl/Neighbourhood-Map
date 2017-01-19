@@ -95,7 +95,7 @@ var VenuesViewModel = function() {
     self.searchText.extend({
       rateLimit: {
         timeout: 400,
-        method: "notifyWhenChangesStop"
+        method: "notifyWhenChangesStop" 
       }
     });
     data.forEach(function(e) {

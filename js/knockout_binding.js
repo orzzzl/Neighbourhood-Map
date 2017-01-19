@@ -101,7 +101,8 @@ ko.bindingHandlers.googlemap = {
             latLng = new google.maps.LatLng(e.lat(), e.lng()),
             marker = new google.maps.Marker({
                 position: latLng,
-                map: map
+                map: map,
+                icon: "imgs/icon.svg"
             });    
         });
     }

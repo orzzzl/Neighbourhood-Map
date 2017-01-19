@@ -128,6 +128,7 @@ ko.bindingHandlers.googlemap = {
         console.log("googlemap update called");
         var venues = valueAccessor().venues(),
         map = new google.maps.Map(element, mapoptions);
+        var buf = $('#info');
         venues.forEach(function(e) {
             e.latLng = new google.maps.LatLng(e.lat(), e.lng()),
             e.marker = new google.maps.Marker({
@@ -154,12 +155,13 @@ ko.bindingHandlers.googlemap = {
                     e.marker.setAnimation(null);                  
                 }, 1555);
             }
-
             e.infowindow = new google.maps.InfoWindow({
                 content: $('#info')[0]
             });
-
         });
+        
+        //when you use infowindow to refer the element it will be moved when the process is done, so we have to add it back.
+        buf.clone().appendTo('#wrapper');
     }
 };
 

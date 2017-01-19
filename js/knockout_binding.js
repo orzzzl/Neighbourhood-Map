@@ -1,8 +1,11 @@
-function venue(data) {
+function venue(data, search_text) {
     var self = this;
     self.name = ko.observable(data.name);
     self.location = ko.observable(data.location);
+    self.lat = ko.observable(data.location.lat);
+    self.lng = ko.observable(data.location.lng);
     self.vid = ko.observable(data.vid);
+    self.search_text = search_text;
     self.gotNewsAready = false;
     self.gotPhotosAlready = false;
     self.news = ko.observableArray([]);
@@ -61,8 +64,48 @@ function venue(data) {
         self.getNews();
         return self.news().length > 0;
     }
+    
+    self.showOnMap = function() {
+        console.log(self.search_text());
+        return true;
+    }
+    self.marker = ko.observable(new google.maps.Marker({
+        position: new google.maps.LatLng(self.lat(), self.lng()),
+        title: self.name(),
+        map: map,
+    }));
 }
 
+
+var mapoptions = {
+    zoom: 16,
+    center: new google.maps.LatLng(40.727009448706866, -74.07961136564653),
+}
+
+ko.bindingHandlers.googlemap = {
+    init: function (element, valueAccessor) {
+        var venues = valueAccessor().venues(),
+        map = new google.maps.Map(element, mapoptions);
+        venues.forEach(function(e) {
+            latLng = new google.maps.LatLng(e.lat(), e.lng()),
+            marker = new google.maps.Marker({
+                position: latLng,
+                map: map
+            });    
+        });
+    },
+    update: function (element, valueAccessor) {
+        var venues = valueAccessor().venues(),
+        map = new google.maps.Map(element, mapoptions);
+        venues.forEach(function(e) {
+            latLng = new google.maps.LatLng(e.lat(), e.lng()),
+            marker = new google.maps.Marker({
+                position: latLng,
+                map: map
+            });    
+        });
+    }
+};
 
 
 var VenuesViewModel = function() {
@@ -77,7 +120,7 @@ var VenuesViewModel = function() {
       }
     });
     data.forEach(function(e) {
-        self.venues.push(new venue(e));
+        self.venues.push(new venue(e, self.searchText));
     });
     this.setVenue = function(clickedVenue) {
         self.currentVenue(clickedVenue);

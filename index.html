@@ -46,7 +46,7 @@
         <br>
         <div id="map" data-bind="googlemap: { venues: filteredVenues }"></div>
         <br>
-        <div data-bind="with: currentVenue" class="mosaic">
+        <div data-bind="with: currentVenue" class="mosaic" id="info">
             <h3 data-bind="text: name"></h3>
             <p class="small" data-bind="text: location().address"></p>
             <p class="small" data-bind="text: location().city"></p>

@@ -6,3 +6,4 @@ https://orzzzl.github.io/Neighbourhood-Map/
 
 ###Reference:
 1. http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+2. https://developers.google.com/maps/documentation/javascript/examples/marker-animations

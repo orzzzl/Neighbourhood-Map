@@ -1,11 +1,10 @@
-function venue(data, search_text) {
+function Venue(data) {
     var self = this;
-    self.name = ko.observable(data.name);
-    self.location = ko.observable(data.location);
-    self.lat = ko.observable(data.location.lat);
-    self.lng = ko.observable(data.location.lng);
-    self.vid = ko.observable(data.vid);
-    self.search_text = search_text;
+    self.name = data.name;
+    self.location = data.location;
+    self.lat = data.location.lat;
+    self.lng = data.location.lng;
+    self.vid = data.vid;
     self.gotNewsAready = false;
     self.gotPhotosAlready = false;
     self.news = ko.observableArray([]);
@@ -20,7 +19,7 @@ function venue(data, search_text) {
         console.log("Now starting to get NY time news feeds");
         $.ajax({
             dataType: "json",
-            url: formNYTimesUrl(self.name()),
+            url: formNYTimesUrl(self.name),
             success: function(res) {
                 console.log("Successful in getting NY Times News feeds!");
                 res.response.docs.forEach(function(feed) {
@@ -46,7 +45,7 @@ function venue(data, search_text) {
         var limit = 5;
         $.ajax({
             dataType: "json",    
-            url: formPhotoUrl(self.vid(), limit),
+            url: formPhotoUrl(self.vid, limit),
             success: function(res) {
                 console.log("Success!!! We got photos from foursquare.");
                 res.response.photos.items.forEach(function(photo) {
@@ -63,12 +62,12 @@ function venue(data, search_text) {
     }
     self.hasPic = function() {
         self.getPhoto();
-        return self.photos().length > 0;
+        return self.photos.length > 0;
     }
     
     self.hasNews = function() {
         self.getNews();
-        return self.news().length > 0;
+        return self.news.length > 0;
     }
     
 }
@@ -99,7 +98,7 @@ var VenuesViewModel = function() {
       }
     });
     data.forEach(function(e) {
-        self.venues.push(new venue(e, self.searchText));
+        self.venues.push(new Venue(e));
     });
     self.setVenue = function(clickedVenue) {
         currentVenue(clickedVenue);
@@ -130,7 +129,7 @@ ko.bindingHandlers.googlemap = {
         map = new google.maps.Map(element, mapoptions);
         var buf = $('#info');
         venues.forEach(function(e) {
-            e.latLng = new google.maps.LatLng(e.lat(), e.lng()),
+            e.latLng = new google.maps.LatLng(e.lat, e.lng),
             e.marker = new google.maps.Marker({
                 animation: google.maps.Animation.DROP,
                 position: e.latLng,
@@ -155,13 +154,15 @@ ko.bindingHandlers.googlemap = {
                     e.marker.setAnimation(null);                  
                 }, 1555);
             }
+            //console.log('#info')[0]
             e.infowindow = new google.maps.InfoWindow({
                 content: $('#info')[0]
-            });
+            });            
         });
         
         //when you use infowindow to refer the element it will be moved when the process is done, so we have to add it back.
-        buf.clone().appendTo('#wrapper');
+        buf.clone().appendTo('#invisiable');
+        
     }
 };
 

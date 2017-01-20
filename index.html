@@ -48,10 +48,10 @@
         <br>
         <div data-bind="with: currentVenue" class="mosaic" id="info">
             <h3 data-bind="text: name"></h3>
-            <p class="small" data-bind="text: location().address"></p>
-            <p class="small" data-bind="text: location().city"></p>
-            <p dclass="small" ata-bind="text: location().state"></p>
-            <p class="small" data-bind="text: location().country"></p>
+            <p class="small" data-bind="text: location.address"></p>
+            <p class="small" data-bind="text: location.city"></p>
+            <p dclass="small" ata-bind="text: location.state"></p>
+            <p class="small" data-bind="text: location.country"></p>
             <h3 data-bind="visible: hasPic()"> Pics from foursquare: </h3>
             <div data-bind="foreach: photos"> <img src="" alt="venue image" data-bind="attr:{src: url}">
                 <br> </div>

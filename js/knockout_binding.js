@@ -124,7 +124,6 @@ var startapp = function() {
             str += '<p class="small">' + (self.location.state || "") + '</p>';
             str += '<p class="small">' + (self.location.country || "") + '</p>';
             if (self.photos().length > 0) {
-                console.log(self.photos().length);
                 str += '<h3> Pics from foursquare: </h3>';
                 self.photos().forEach(function(pic){
                     str += '<img src="' + pic.url + '" alt="venue image" width="200px">';

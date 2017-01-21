@@ -1,7 +1,6 @@
-var init = true;
+var previousopen = null;
 
 var Venue = function(data) {
-    console.log(vm);
     var self = this;
     self.name = data.name;
     self.location = data.location;
@@ -10,14 +9,16 @@ var Venue = function(data) {
     self.vid = data.vid;
     self.gotNewsAready = false;
     self.gotPhotosAlready = false;
+    self.renderStrAlready = false;
     self.news = ko.observableArray([]);
     self.photos = ko.observableArray([]);
-    self.getNews = function() {
+    self.getNews = function(callback) {
         if (self.gotNewsAlready) {
             console.log("NY Times News feeds for this venue is got already, won't request again");
+            callback();
             return;
         } else {
-            self.gotNewsAlready = true;
+            self.gotNewsAready = true;
         }
         console.log("Now starting to get NY time news feeds");
         $.ajax({
@@ -31,15 +32,21 @@ var Venue = function(data) {
                         headline: feed.headline.main
                     });
                 });
+                callback();
+                self.str += '</div>';
             },
-            error: function() {
+            error: function(callback) {
                 alert("Failing to get NY times");
+                self.str += '</div>';
+                callback();
             }
         });
     }
-    self.getPhoto = function() {
+    self.getPhoto = function(callback) {
+        console.log(self.gotPhotosAlready);
         if (self.gotPhotosAlready) {
             console.log("Photo for this venue is got already, won't request again");
+            self.getNews(callback);
             return;
         } else {
             self.gotPhotosAlready = true;
@@ -57,20 +64,13 @@ var Venue = function(data) {
                         url: purl
                     });
                 });
+                self.getNews(callback);
             },
             error: function() {
                 alert("Failing to get Pics from foursquare");
+                self.getNews(callback);
             }
         });
-    }
-    self.hasPic = function() {
-        self.getPhoto();
-        return self.photos.length > 0;
-    }
-    
-    self.hasNews = function() {
-        self.getNews();
-        return self.news.length > 0;
     }
     
     self.marker = new google.maps.Marker({
@@ -84,16 +84,53 @@ var Venue = function(data) {
         vm.setVenue(self);
     });
     
-    self.visibility = ko.computed(function() {
-        var filter = vm.searchText().toLowerCase().trim();
-        console.log(filter);
-        var shouldShow = self.name.toLowerCase().indexOf(filter) !== -1;
-        self.marker.setVisible(shouldShow);
-        return shouldShow;
-    });
+    self.markerClickHandler = function() {
+        //auto close the previously opened infowindow;
+        if (previousopen != null) previousopen.close();
+        previousopen = self.infowindow;
+        self.infowindow.open(map, self.marker);
+        if (self.marker.getAnimation() !== null) {
+            self.marker.setAnimation(null);
+        } else {
+            self.marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+        window.setTimeout(function(){
+            self.marker.setAnimation(null);                  
+        }, 1400);
+    }
+    
+    self.infowindow = new google.maps.InfoWindow({});       
+    
+    self.render = function() {
+        self.getPhoto(self.setinfowindow);
+    }
+    
+    self.setinfowindow = function() {
+        var str = '<div class="mosaic" id="info">';
+        str += '<h3>' + self.name + '</h3>';
+        str += '<p class="small">' + (self.location.address || "") +  '</p>';
+        str += '<p class="small">' + (self.location.city || "") + '</p>';
+        str += '<p class="small">' + (self.location.state || "") + '</p>';
+        str += '<p class="small">' + (self.location.country || "") + '</p>';
+        if (self.photos().length > 0) {
+            console.log(self.photos().length);
+            str += '<h3> Pics from foursquare: </h3>';
+            self.photos().forEach(function(pic){
+                str += '<img src="' + pic.url + '" alt="venue image" width="200px">';
+                str += '<br><br>';
+            });
+        }
+        if (self.news().length > 0) {
+            str += '<h3> New York Times news feed: </h3>';
+            self.news().forEach(function(nynews) {
+                str += `<i class="fa fa-arrow-right" aria-hidden="true"></i><a target="_blank", href="` + nynews.url + '}">' + nynews.headline + `</a><br>`;
+            });
+        }
+        str += '</div>';
+        self.infowindow.setContent(str);
+    }
 }
 
-var previousopen = null;
 var VenuesViewModel = function() {
 	var self = this;
     self.searchText = ko.observable("");
@@ -116,63 +153,29 @@ var VenuesViewModel = function() {
     });
     self.setVenue = function(clickedVenue) {
         self.currentVenue(clickedVenue);
-        alert("clicked");
+        //console.log(self.currentVenue);
+        self.currentVenue().render();
+       // self.currentVenue().infowindow.setContent(self.currentVenue().render());
+        self.currentVenue().markerClickHandler();
     }
     
     //filter the items using the filter text
     self.filteredVenues = ko.computed(function() {
         var filter = self.searchText().toLowerCase().trim();
         if (!filter) {
+            self.venues().forEach(function(v) {
+                v.marker.setVisible(true);    
+            });
             return self.venues();
         } else {
             return ko.utils.arrayFilter(self.venues(), function(item) {
-                // filtering for string name contain the search text
-                return item.name.toLowerCase().indexOf(filter) !== -1;
+                var match = item.name.toLowerCase().indexOf(filter) !== -1;
+                item.marker.setVisible(match)
+                return match;
             });
         }
     }, self);
 }
-/*
-ko.bindingHandlers.googlemap = {
-    update: function (element, valueAccessor) {
-        console.log("googlemap init called");
-        var venues = valueAccessor().venues(),
-        map = new google.maps.Map(element, mapoptions);
-        venues.forEach(function(e) {
-            e.latLng = new google.maps.LatLng(e.lat, e.lng),
-            e.marker = new google.maps.Marker({
-                animation: google.maps.Animation.DROP,
-                position: e.latLng,
-                map: map,
-                icon: "imgs/icon.svg"
-            });    
-            e.marker.addListener('click', function(){
-                VenuesViewModel().setVenue(e);
-            });
-            
-            e.marker.setVisible(e.visibility());
-
-            e.markerClickHandler = function() {
-                //auto close the previously opened infowindow;
-                if (previousopen != null) previousopen.close();
-                previousopen = e.infowindow;
-                e.infowindow.open(map, e.marker);
-                if (e.marker.getAnimation() !== null) {
-                    e.marker.setAnimation(null);
-                } else {
-                    e.marker.setAnimation(google.maps.Animation.BOUNCE);
-                }
-                window.setTimeout(function(){
-                    e.marker.setAnimation(null);                  
-                }, 1555);
-            }
-            e.infowindow = new google.maps.InfoWindow({
-                content: $('#info')[0]
-            });            
-        });        
-    }
-};
-*/
 
 var vm = new VenuesViewModel();
 ko.applyBindings(vm);

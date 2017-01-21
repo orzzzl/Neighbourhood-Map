@@ -1,4 +1,7 @@
-function Venue(data) {
+var init = true;
+
+var Venue = function(data) {
+    console.log(vm);
     var self = this;
     self.name = data.name;
     self.location = data.location;
@@ -70,39 +73,50 @@ function Venue(data) {
         return self.news.length > 0;
     }
     
+    self.marker = new google.maps.Marker({
+            animation: google.maps.Animation.DROP,
+            position: new google.maps.LatLng(self.lat, self.lng),
+            map: map,
+            icon: "imgs/icon.svg"
+    });    
+    
+    self.marker.addListener('click', function(){
+        vm.setVenue(self);
+    });
+    
+    self.visibility = ko.computed(function() {
+        var filter = vm.searchText().toLowerCase().trim();
+        console.log(filter);
+        var shouldShow = self.name.toLowerCase().indexOf(filter) !== -1;
+        self.marker.setVisible(shouldShow);
+        return shouldShow;
+    });
 }
 
-
-var mapoptions = {
-    zoom: 16,
-    center: new google.maps.LatLng(40.727009448706866, -74.07961136564653),
-}
-
-
-
-var content;
-//keep track of the previously opened infowindow
 var previousopen = null;
-
-
-var currentVenue = ko.observable();
-
 var VenuesViewModel = function() {
 	var self = this;
-    self.venues = ko.observableArray([]);
     self.searchText = ko.observable("");
     self.searchText.extend({
       rateLimit: {
         timeout: 400,
-        method: "notifyWhenChangesStop" 
+        method: "notifyWhenChangesStop"
       }
     });
+    self.venues = ko.observableArray([]);
+    self.currentVenue = ko.observable();
+    console.log('googlemap init called');
+    var mapoptions = {
+        zoom: 16,
+        center: new google.maps.LatLng(40.727009448706866, -74.07961136564653),
+    }
+    map = new google.maps.Map($('#map')[0], mapoptions);
     data.forEach(function(e) {
-        self.venues.push(new Venue(e));
+        self.venues.push(new Venue(e));      
     });
     self.setVenue = function(clickedVenue) {
-        currentVenue(clickedVenue);
-        currentVenue().markerClickHandler();
+        self.currentVenue(clickedVenue);
+        alert("clicked");
     }
     
     //filter the items using the filter text
@@ -113,21 +127,17 @@ var VenuesViewModel = function() {
         } else {
             return ko.utils.arrayFilter(self.venues(), function(item) {
                 // filtering for string name contain the search text
-                return item.name().toLowerCase().indexOf(filter) !== -1;
+                return item.name.toLowerCase().indexOf(filter) !== -1;
             });
         }
     }, self);
-    
-    return self;
-
 }
-
+/*
 ko.bindingHandlers.googlemap = {
     update: function (element, valueAccessor) {
-        console.log("googlemap update called");
+        console.log("googlemap init called");
         var venues = valueAccessor().venues(),
         map = new google.maps.Map(element, mapoptions);
-        var buf = $('#info');
         venues.forEach(function(e) {
             e.latLng = new google.maps.LatLng(e.lat, e.lng),
             e.marker = new google.maps.Marker({
@@ -139,6 +149,8 @@ ko.bindingHandlers.googlemap = {
             e.marker.addListener('click', function(){
                 VenuesViewModel().setVenue(e);
             });
+            
+            e.marker.setVisible(e.visibility());
 
             e.markerClickHandler = function() {
                 //auto close the previously opened infowindow;
@@ -154,16 +166,13 @@ ko.bindingHandlers.googlemap = {
                     e.marker.setAnimation(null);                  
                 }, 1555);
             }
-            //console.log('#info')[0]
             e.infowindow = new google.maps.InfoWindow({
                 content: $('#info')[0]
             });            
-        });
-        
-        //when you use infowindow to refer the element it will be moved when the process is done, so we have to add it back.
-        buf.clone().appendTo('#invisiable');
-        
+        });        
     }
 };
+*/
 
-ko.applyBindings(new VenuesViewModel());
+var vm = new VenuesViewModel();
+ko.applyBindings(vm);

@@ -54,7 +54,6 @@ var startapp = function() {
             });
         }
         self.getPhoto = function(callback) {
-            console.log(self.gotPhotosAlready);
             if (self.gotPhotosAlready) {
                 console.log("Photo for this venue is got already, won't request again");
                 self.getNews(callback);
